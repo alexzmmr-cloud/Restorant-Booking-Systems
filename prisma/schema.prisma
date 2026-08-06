@@ -67,6 +67,8 @@ model Booking {
   @@index([userId, date, time])
   @@index([tableId, date, time])
   @@index([status])
+  // Частичные unique-индексы (только для активных статусов pending/confirmed) заданы
+  // вручную в migration.sql — Prisma schema их не выражает напрямую.
 }
 
 model Notification {
