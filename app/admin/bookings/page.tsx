@@ -41,7 +41,7 @@ export default async function AdminBookingsPage({
                     {toDateOnlyKey(booking.date)} в {booking.time}
                   </p>
                   <p className="mt-0.5 text-sm text-text/60">
-                    {booking.guestsCount} гостей · Стол {booking.table.name}
+                    {booking.guestsCount} гостей · {booking.table.name}
                   </p>
                   <p className="mt-1 text-sm text-text/60">
                     {booking.user.name} · {booking.user.email}

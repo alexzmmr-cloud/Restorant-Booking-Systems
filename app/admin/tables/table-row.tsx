@@ -87,7 +87,17 @@ export function TableRow({ table, striped }: { table: Table; striped: boolean })
             min={1}
             max={8}
             value={capacity}
-            onChange={(e) => setCapacity(Number(e.target.value))}
+            onFocus={(e) => e.target.select()}
+            onChange={(e) => {
+              const raw = e.target.value;
+              if (raw === "") {
+                setCapacity(1);
+                return;
+              }
+              const parsed = Number(raw);
+              if (Number.isNaN(parsed)) return;
+              setCapacity(Math.min(8, Math.max(1, parsed)));
+            }}
             className="w-20 rounded-control border border-border bg-surface px-3 py-1.5 text-sm outline-none focus:border-primary"
           />
         </td>

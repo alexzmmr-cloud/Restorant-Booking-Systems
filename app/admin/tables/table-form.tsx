@@ -58,7 +58,17 @@ export function TableForm() {
           min={1}
           max={8}
           value={capacity}
-          onChange={(e) => setCapacity(Number(e.target.value))}
+          onFocus={(e) => e.target.select()}
+          onChange={(e) => {
+            const raw = e.target.value;
+            if (raw === "") {
+              setCapacity(1);
+              return;
+            }
+            const parsed = Number(raw);
+            if (Number.isNaN(parsed)) return;
+            setCapacity(Math.min(8, Math.max(1, parsed)));
+          }}
           className="w-24 rounded-control border border-border bg-background px-3 py-2 text-sm text-text transition-colors duration-200 outline-none focus:border-primary"
           required
         />

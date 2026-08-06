@@ -10,11 +10,21 @@ export function SiteHeaderShell({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!isLanding) return;
-    function onScroll() {
-      setScrolled(window.scrollY > 80);
+
+    const heroEl = document.getElementById("hero");
+
+    function evaluate() {
+      const heroHeight = heroEl?.offsetHeight ?? 0;
+      setScrolled(window.scrollY >= heroHeight);
     }
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+
+    evaluate();
+    window.addEventListener("scroll", evaluate);
+    window.addEventListener("resize", evaluate);
+    return () => {
+      window.removeEventListener("scroll", evaluate);
+      window.removeEventListener("resize", evaluate);
+    };
   }, [isLanding]);
 
   const transparent = isLanding && !scrolled;

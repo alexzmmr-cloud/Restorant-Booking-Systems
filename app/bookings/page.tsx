@@ -1,8 +1,18 @@
 import Link from "next/link";
+import type { BookingStatus } from "@/lib/generated/prisma/client";
 import { requireUserOrRedirect } from "@/lib/auth/require-role";
 import { prisma } from "@/lib/prisma";
 import { StatusBadge } from "../status-badge";
 import { CancelButton } from "./cancel-button";
+
+/** Активные брони (ждут визита) — сверху, ближайшая дата первой; терминальные — снизу. */
+const STATUS_GROUP: Record<BookingStatus, 0 | 1> = {
+  pending: 0,
+  confirmed: 0,
+  completed: 1,
+  cancelled: 1,
+  no_show: 1,
+};
 
 export default async function BookingsPage() {
   const user = await requireUserOrRedirect();
@@ -12,6 +22,8 @@ export default async function BookingsPage() {
     include: { table: true },
     orderBy: [{ date: "desc" }, { time: "desc" }],
   });
+
+  bookings.sort((a, b) => STATUS_GROUP[a.status] - STATUS_GROUP[b.status]);
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-12 lg:px-0">
@@ -49,7 +61,7 @@ export default async function BookingsPage() {
                     в {booking.time}
                   </p>
                   <p className="mt-1 text-sm text-text/60">
-                    {booking.guestsCount} гостей · Стол {booking.table.name}
+                    {booking.guestsCount} гостей · {booking.table.name}
                   </p>
                 </div>
                 <StatusBadge status={booking.status} />
