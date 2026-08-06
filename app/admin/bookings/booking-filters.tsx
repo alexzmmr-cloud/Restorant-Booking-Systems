@@ -2,7 +2,13 @@
 
 import { useRouter } from "next/navigation";
 
-const STATUS_OPTIONS = ["pending", "confirmed", "cancelled", "completed", "no_show"] as const;
+const STATUS_OPTIONS = [
+  { value: "pending", label: "Ожидает подтверждения" },
+  { value: "confirmed", label: "Подтверждено" },
+  { value: "cancelled", label: "Отменено" },
+  { value: "completed", label: "Завершено" },
+  { value: "no_show", label: "Неявка" },
+] as const;
 
 export function BookingFilters({
   currentStatus,
@@ -23,36 +29,36 @@ export function BookingFilters({
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-3">
+    <div className="flex flex-wrap items-center gap-4 rounded-card bg-surface p-4 shadow-[0_2px_12px_rgba(27,27,27,0.06)]">
       <label className="flex items-center gap-2 text-sm">
-        Статус
+        <span className="font-semibold text-text">Статус</span>
         <select
           value={currentStatus ?? ""}
           onChange={(e) => updateParams({ status: e.target.value })}
-          className="rounded border border-neutral-300 px-2 py-1"
+          className="rounded-control border border-border bg-background px-3 py-1.5 text-sm text-text transition-colors duration-200 outline-none focus:border-primary"
         >
           <option value="">Все</option>
           {STATUS_OPTIONS.map((status) => (
-            <option key={status} value={status}>
-              {status}
+            <option key={status.value} value={status.value}>
+              {status.label}
             </option>
           ))}
         </select>
       </label>
       <label className="flex items-center gap-2 text-sm">
-        Дата
+        <span className="font-semibold text-text">Дата</span>
         <input
           type="date"
           value={currentDate ?? ""}
           onChange={(e) => updateParams({ date: e.target.value })}
-          className="rounded border border-neutral-300 px-2 py-1"
+          className="rounded-control border border-border bg-background px-3 py-1.5 text-sm text-text transition-colors duration-200 outline-none focus:border-primary"
         />
       </label>
       {(currentStatus || currentDate) && (
         <button
           type="button"
           onClick={() => router.push("/admin/bookings")}
-          className="text-sm underline"
+          className="text-sm font-semibold text-primary transition-colors duration-200 hover:text-primary-hover"
         >
           Сбросить фильтры
         </button>

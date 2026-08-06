@@ -24,7 +24,7 @@ export function MarkReadButton({ notificationId }: { notificationId: string }) {
       type="button"
       onClick={handleClick}
       disabled={isPending}
-      className="text-xs text-neutral-500 underline disabled:opacity-40"
+      className="text-xs font-semibold text-primary transition-colors duration-200 hover:text-primary-hover disabled:cursor-not-allowed disabled:opacity-40"
     >
       {isPending ? "..." : "Отметить прочитанным"}
     </button>

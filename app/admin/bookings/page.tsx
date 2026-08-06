@@ -1,6 +1,7 @@
 import type { BookingStatus } from "@/lib/generated/prisma/client";
 import { listBookingsForAdmin } from "@/lib/admin/booking-queries";
 import { toDateOnlyKey } from "@/lib/booking/rules";
+import { StatusBadge } from "../../status-badge";
 import { BookingActions } from "./booking-actions";
 import { BookingFilters } from "./booking-filters";
 
@@ -20,24 +21,34 @@ export default async function AdminBookingsPage({
   const bookings = await listBookingsForAdmin({ status, date: dateParam });
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-5 py-2">
       <BookingFilters currentStatus={status} currentDate={dateParam} />
 
       {bookings.length === 0 ? (
-        <p className="text-neutral-500">Бронирований по заданным фильтрам не найдено.</p>
+        <div className="rounded-card bg-surface p-10 text-center shadow-[0_2px_12px_rgba(27,27,27,0.06)]">
+          <p className="text-text/60">Бронирований по заданным фильтрам не найдено.</p>
+        </div>
       ) : (
         <ul className="flex flex-col gap-3">
           {bookings.map((booking) => (
-            <li key={booking.id} className="rounded border border-neutral-200 p-4">
-              <div className="flex items-center justify-between">
-                <p>
-                  {toDateOnlyKey(booking.date)} в {booking.time}, {booking.guestsCount} гостей
-                </p>
-                <span className="text-sm font-medium">{booking.status}</span>
+            <li
+              key={booking.id}
+              className="rounded-card bg-surface p-5 shadow-[0_2px_12px_rgba(27,27,27,0.06)]"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="font-display text-lg font-semibold text-text">
+                    {toDateOnlyKey(booking.date)} в {booking.time}
+                  </p>
+                  <p className="mt-0.5 text-sm text-text/60">
+                    {booking.guestsCount} гостей · Стол {booking.table.name}
+                  </p>
+                  <p className="mt-1 text-sm text-text/60">
+                    {booking.user.name} · {booking.user.email}
+                  </p>
+                </div>
+                <StatusBadge status={booking.status} />
               </div>
-              <p className="text-sm text-neutral-500">
-                Гость: {booking.user.name} ({booking.user.email}) · Стол: {booking.table.name}
-              </p>
               <BookingActions bookingId={booking.id} status={booking.status} />
             </li>
           ))}

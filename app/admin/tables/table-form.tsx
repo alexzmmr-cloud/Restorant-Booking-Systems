@@ -37,37 +37,40 @@ export function TableForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-end gap-3">
-      <label className="flex flex-col gap-1 text-sm">
-        Название
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-wrap items-end gap-4 rounded-card bg-surface p-5 shadow-[0_2px_12px_rgba(27,27,27,0.06)]"
+    >
+      <label className="flex flex-col gap-2 text-sm">
+        <span className="font-semibold text-text">Название</span>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="rounded border border-neutral-300 px-2 py-1"
+          className="rounded-control border border-border bg-background px-3 py-2 text-sm text-text transition-colors duration-200 outline-none focus:border-primary"
           required
         />
       </label>
-      <label className="flex flex-col gap-1 text-sm">
-        Вместимость
+      <label className="flex flex-col gap-2 text-sm">
+        <span className="font-semibold text-text">Вместимость</span>
         <input
           type="number"
           min={1}
           max={8}
           value={capacity}
           onChange={(e) => setCapacity(Number(e.target.value))}
-          className="rounded border border-neutral-300 px-2 py-1"
+          className="w-24 rounded-control border border-border bg-background px-3 py-2 text-sm text-text transition-colors duration-200 outline-none focus:border-primary"
           required
         />
       </label>
       <button
         type="submit"
         disabled={isSubmitting}
-        className="rounded bg-neutral-900 px-4 py-2 text-sm text-white disabled:opacity-40"
+        className="rounded-control bg-primary px-5 py-2.5 text-sm font-semibold text-background transition-colors duration-200 hover:bg-primary-hover active:bg-primary-active disabled:cursor-not-allowed disabled:opacity-40"
       >
         {isSubmitting ? "Добавляем..." : "Добавить стол"}
       </button>
-      {error && <span className="text-sm text-red-600">{error}</span>}
+      {error && <span className="text-sm text-error">{error}</span>}
     </form>
   );
 }

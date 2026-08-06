@@ -6,24 +6,26 @@ export default async function AdminTablesPage() {
   const tables = await listAllTables();
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 py-2">
       <TableForm />
 
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b border-neutral-200 text-left">
-            <th className="py-2 pr-4">Название</th>
-            <th className="py-2 pr-4">Вместимость</th>
-            <th className="py-2 pr-4">Статус</th>
-            <th className="py-2">Действия</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tables.map((table) => (
-            <TableRow key={table.id} table={table} />
-          ))}
-        </tbody>
-      </table>
+      <div className="overflow-x-auto rounded-card bg-surface shadow-[0_2px_12px_rgba(27,27,27,0.06)]">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-border text-left">
+              <th className="px-5 py-3 font-semibold text-text">Название</th>
+              <th className="px-5 py-3 font-semibold text-text">Вместимость</th>
+              <th className="px-5 py-3 font-semibold text-text">Статус</th>
+              <th className="px-5 py-3 font-semibold text-text">Действия</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tables.map((table, i) => (
+              <TableRow key={table.id} table={table} striped={i % 2 === 1} />
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

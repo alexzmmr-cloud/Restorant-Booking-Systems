@@ -28,16 +28,16 @@ export function CancelButton({ bookingId }: { bookingId: string }) {
   }
 
   return (
-    <div className="mt-2">
+    <div className="mt-4 flex flex-col items-start gap-1.5">
       <button
         type="button"
         onClick={handleCancel}
         disabled={isPending}
-        className="text-sm text-red-600 underline disabled:opacity-40"
+        className="rounded-control border border-error px-3.5 py-1.5 text-xs font-semibold text-error transition-colors duration-200 hover:bg-error hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
       >
-        {isPending ? "Отменяем..." : "Отменить"}
+        {isPending ? "Отменяем..." : "Отменить бронирование"}
       </button>
-      {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs text-error">{error}</p>}
     </div>
   );
 }
