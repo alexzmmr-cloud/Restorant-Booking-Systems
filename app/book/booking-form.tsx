@@ -26,10 +26,12 @@ export function BookingForm({
   const [guestsCount, setGuestsCount] = useState(initialGuestsCount ?? 2);
   const [times, setTimes] = useState<string[]>([]);
   const [selectedTime, setSelectedTime] = useState("");
-  const [isLoadingTimes, setIsLoadingTimes] = useState(false);
+  const [loadedFor, setLoadedFor] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const pendingInitialTime = useRef(initialTime);
+  const requestKey = selectedDate ? `${selectedDate}|${guestsCount}` : null;
+  const isLoadingTimes = requestKey !== null && requestKey !== loadedFor;
 
   useEffect(() => {
     getAvailableDatesAction().then((result) => {
@@ -39,18 +41,20 @@ export function BookingForm({
   }, []);
 
   useEffect(() => {
-    if (!selectedDate) return;
-    setIsLoadingTimes(true);
-    setSelectedTime("");
-    getAvailableTimesAction(selectedDate, guestsCount)
-      .then((result) => {
-        setTimes(result);
-        const wanted = pendingInitialTime.current;
-        pendingInitialTime.current = undefined;
-        setSelectedTime(wanted && result.includes(wanted) ? wanted : result[0] ?? "");
-      })
-      .finally(() => setIsLoadingTimes(false));
-  }, [selectedDate, guestsCount]);
+    if (!requestKey) return;
+    let cancelled = false;
+    getAvailableTimesAction(selectedDate, guestsCount).then((result) => {
+      if (cancelled) return;
+      setTimes(result);
+      const wanted = pendingInitialTime.current;
+      pendingInitialTime.current = undefined;
+      setSelectedTime(wanted && result.includes(wanted) ? wanted : result[0] ?? "");
+      setLoadedFor(requestKey);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [requestKey, selectedDate, guestsCount]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
